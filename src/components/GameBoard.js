@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Ship } from './Ship';
 import GridSquare from './GridSquare';
 import _ from 'lodash';
+import  {computerTurn} from '../Computer'
 
 const GameBoard = (props) => {
   const [ships, setShips] = useState([]);
@@ -12,7 +13,10 @@ const GameBoard = (props) => {
     }
   }, [ships])
 
-
+  useEffect(() => {
+    if (props.currentPlayer === 'computer')
+      setTimeout(()=>computerTurn(), 500)
+  })
 
   const placeShip = (coords, data) => {
     const shipData = JSON.parse(data)
@@ -123,6 +127,7 @@ const GameBoard = (props) => {
             placeShip={placeShip}
             player={props.player}
             switchPlayer={props.switchPlayer}
+            currentPlayer={props.currentPlayer}
           />)
       }
     }

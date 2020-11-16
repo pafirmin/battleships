@@ -12,11 +12,11 @@ const GridSquare = (props) => {
   })
 
   const handleClick = () => {
-    if (!clicked) {
+    if (!clicked && props.currentPlayer !== player) {
       setClicked(true)
       makeShot()
     } else {
-      console.log('already clicked')
+      return 'already clicked'
     }
   }
 
@@ -50,7 +50,6 @@ const GridSquare = (props) => {
       onDrop={(e) => drop(e)}
       onDragOver={(e) => allowDrop(e)}
     >
-
     </div>
   )
 }

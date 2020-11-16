@@ -1,7 +1,6 @@
 import GameBoard from './components/GameBoard'
 import { useState, useEffect } from 'react'
 import ShipYard from './components/ShipYard';
-import { computerTurn } from './Computer'
 
 function App() {
 
@@ -12,19 +11,11 @@ function App() {
       currentPlayer === 'player' ? 'computer' : 'player')
   }
 
-  useEffect(() => {
-    if (currentPlayer === 'computer')
-    computerTurn()
-  })
-
-  console.log(currentPlayer)
-
-
   return (
     <div className="App">
       <div className="boards-container">
-        <GameBoard player='player' switchPlayer={switchPlayer} />
-        <GameBoard player='computer' switchPlayer={switchPlayer} />
+        <GameBoard player='player' switchPlayer={switchPlayer} currentPlayer={currentPlayer} />
+        <GameBoard player='computer' switchPlayer={switchPlayer} currentPlayer={currentPlayer} />
       </div>
       <ShipYard />
     </div>
