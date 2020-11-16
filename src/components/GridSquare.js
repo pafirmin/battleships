@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react'
 
 const GridSquare = (props) => {
-  const { coords, recieveHit, isShip, placeShip} = props
+  const { coords, recieveHit, isShip, placeShip, player } = props
   const [style, setStyle] = useState('clear')
   const [clicked, setClicked] = useState(false)
 
   useEffect(() => {
     if (isShip) {
-      setStyle('ship')
+      setStyle(player === 'computer' ? 'clear' : 'ship')
     }
   })
 
   const handleClick = () => {
     if (!clicked) {
-      console.log(coords)
       setClicked(true)
       makeShot()
     } else {
@@ -26,7 +25,8 @@ const GridSquare = (props) => {
       recieveHit(coords);
       setStyle('hit');
     } else {
-      setStyle('miss')
+      setStyle('miss');
+      props.switchPlayer()
     }
   }
 
@@ -35,16 +35,18 @@ const GridSquare = (props) => {
   }
 
   const drop = (e) => {
-    e.preventDefault();
-    var data = e.dataTransfer.getData("text");
-    placeShip(coords, data);
+    if (player === 'player') {
+      e.preventDefault();
+      var data = e.dataTransfer.getData("text");
+      placeShip(coords, data);
+    }
   }
 
 
   return (
     <div
       onClick={() => handleClick()}
-      className={`grid-square ${style}`}
+      className={`grid-square ${style} ${player}`}
       onDrop={(e) => drop(e)}
       onDragOver={(e) => allowDrop(e)}
     >

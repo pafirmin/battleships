@@ -58,22 +58,34 @@ a:visited {
   box-sizing: border-box;
 }
 
+.boards-container {
+  display: flex;
+}
+
 .game-board {
+  margin: 0 auto;
   width: 500px;
   height: 500px;
   display: grid;
   grid-template-columns: repeat(10, 1fr);
+  /* transform: perspective(800px) rotateX(45deg)  */
+}
+
+.ship-yard {
+  display: flex;
+  gap: 12px;
 }
 
 .player-ship {
   display: grid;
   grid-template-columns: 1fr;
   width: 50px;
-  height: 200px;
 }
 
 .grid-square {
   border: 1px solid black;
+  width: 100%;
+  height: 50px;
 }
 
 .clear {
