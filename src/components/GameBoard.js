@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { Ship } from './Ship';
 import GridSquare from './GridSquare';
+import _ from 'lodash';
 
 const GameBoard = () => {
-  const [ships, setShips] = useState([Ship(['1, 1', '1, 2', '1, 3'])]);
+  const [ships, setShips] = useState([Ship([[1, 1], [1, 2], [1, 3]])]);
 
   useEffect(() => {
+    console.log(ships)
     if (ships.every(ship => ship.isSunk() === true)) {
       console.log('winner');
     }
   }, [ships])
+
+  const placeShip = (coords, data) => {
+    const coordArr = []
+    for (let i = 0; i < data; i++) {
+      coordArr.push([coords[0], coords[1] + i])
+    }
+    addShip(coordArr)
+  }
 
   const addShip = (coords) => {
     const arr = [...ships];
@@ -18,12 +28,14 @@ const GameBoard = () => {
   }
 
   const isShip = (coords) => {
-    return ships.some(ship => ship.coords.includes(coords));
+    return ships.some(ship => ship.coords.some(coord => _.isEqual(coord, coords)));
   }
 
   const findShip = (coords) => {
     for (const ship of ships) {
-      if (ship.coords.includes(coords)) { return ship } 
+      if (ship.coords.includes(coords)) {
+         return ship
+      } 
     }
   }
 
@@ -40,7 +52,7 @@ const GameBoard = () => {
     for (let i = 0; i < 10; i++) {
       for (let j = 0; j < 10; j++) {
         children.push(
-          <GridSquare recieveHit={recieveHit} coords={`${i}, ${j}`} isShip={isShip(`${i}, ${j}`)} />)
+          <GridSquare recieveHit={recieveHit} coords={[i, j]} isShip={isShip([i, j])} placeShip={placeShip}/>)
       }
     }
     return children
@@ -49,7 +61,7 @@ const GameBoard = () => {
   return (
     <div className="game-board">
       {createGrid()}
-      <button onClick={()=> addShip(['5, 5', '5, 6', '5, 7'])}>Click</button>
+      <button onClick={()=> addShip([[5, 5], [5, 6], [5, 7]])}>Click</button>
     </div>
   )
 }
