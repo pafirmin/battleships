@@ -1,14 +1,11 @@
 const Ship = (coordsArr) => {
   const coords = coordsArr;
-  const size = coordsArr.length;
+  let hitPoints = coordsArr.length;
 
-  const hit = (i) => {
-    coords[i] = 'x';
-  }
+  const hit = () => { hitPoints-- }   
+  const isSunk = () => { return hitPoints === 0 };
 
-  const isSunk = () => coords.every(coord => coord === 'x')
-
-  return { size, hit, isSunk, coords }
+  return { hit, isSunk, coords }
 }
 
-export { Ship }
+export default Ship

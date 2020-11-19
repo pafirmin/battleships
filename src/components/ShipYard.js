@@ -5,10 +5,10 @@ const ShipYard = () => {
   const fleet = [6, 4, 4, 3, 3, 3, 2, 2, 2, 2]
 
   return (
-    <div className="ship-yard">
+    <div className="ship-yard" id="shipYard">
       {
         fleet.map((size, i) => {
-          return <PlayerShip size={size} shipId={`ship-${i}`} />
+          return <PlayerShip size={size} shipId={`ship-${i}`} key={i} />
         })
       }
     </div>

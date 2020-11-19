@@ -5,6 +5,7 @@ const PlayerShips = (props) => {
   let rotated = false
 
   function drag(e) {
+    e.target.style.scale = '1'
     const data =
       JSON.stringify({
         size: e.target.dataset.size,
@@ -31,24 +32,24 @@ const PlayerShips = (props) => {
     let children = []
     for (let i = 0; i < props.size; i++) {
       children.push(
-        <div className="grid-square"></div>
+        <div className="grid-square" key={i} />
       )
     }
     return children
   }
 
   return (
-    <div>
+
       <div className="player-ship ship"
         id={props.shipId}
         draggable="true"
         data-size={props.size}
         onDragStart={(e) => drag(e)}
+        onDragEnd={(e) => e.target.style.scale = '.5'}
         onClick={(e) => handleClick(e)}
       >
         {createShip()}
       </div>
-    </div>
   )
 }
 

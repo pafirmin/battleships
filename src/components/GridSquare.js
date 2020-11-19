@@ -4,29 +4,30 @@ const GridSquare = (props) => {
   const { coords, recieveHit, isShip, placeShip, player } = props
   const [style, setStyle] = useState('clear')
   const [clicked, setClicked] = useState(false)
+  const [icon, setIcon] = useState('')
 
   useEffect(() => {
-    if (isShip) {
-      setStyle(player === 'computer' ? 'clear' : 'ship')
+    if (isShip && player === 'player') {
+      setStyle('ship')
     }
-  })
+  }, [isShip, player])
+  
 
   const handleClick = () => {
     if (!clicked && props.currentPlayer !== player) {
       setClicked(true)
       makeShot()
-    } else {
-      return 'already clicked'
     }
   }
 
   const makeShot = () => {
     if (isShip) {
       recieveHit(coords);
-      setStyle('hit');
+      setStyle('hit')
+      setIcon(<i className="fas fa-crosshairs"></i>)
     } else {
-      setStyle('miss');
       props.switchPlayer()
+      setIcon(<i className="fas fa-times"></i>);
     }
   }
 
@@ -49,7 +50,9 @@ const GridSquare = (props) => {
       className={`grid-square ${style} ${player}`}
       onDrop={(e) => drop(e)}
       onDragOver={(e) => allowDrop(e)}
+      data-hit={clicked}
     >
+      {icon}
     </div>
   )
 }

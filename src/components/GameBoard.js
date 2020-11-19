@@ -1,22 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { Ship } from './Ship';
-import GridSquare from './GridSquare';
 import _ from 'lodash';
-import  {computerTurn} from '../Computer'
+import Ship from './Ship';
+import GridSquare from './GridSquare';
+import comp from '../Computer'
 
 const GameBoard = (props) => {
+  const { gameStarted, setBoardReady, player } = props
   const [ships, setShips] = useState([]);
 
   useEffect(() => {
-    if (ships.every(ship => ship.isSunk() === true)) {
-      console.log('winner');
+    if (gameStarted && player === 'computer') {
+      addRandomShips()
     }
-  }, [ships])
+  }, [gameStarted])
 
   useEffect(() => {
-    if (props.currentPlayer === 'computer')
-      setTimeout(()=>computerTurn(), 500)
+    if (gameStarted && ships.every(ship => ship.isSunk())) {
+      console.log('winner');
+    }
+  }, [ships, gameStarted])
+
+  useEffect(() => {
+    if (props.currentPlayer === 'computer' && player === 'player')
+      setTimeout(() => comp.computerTurn(), 500)
   })
+
+  useEffect(() => {
+    ships.length === 10 && setBoardReady(true)
+  }, [ships, setBoardReady])
 
   const placeShip = (coords, data) => {
     const shipData = JSON.parse(data)
@@ -28,16 +39,16 @@ const GameBoard = (props) => {
     }
   }
 
-  const getCoordArray = (coords, obj) => {
+  const getCoordArray = ([a, b], shipData) => {
     const coordArr = []
 
-    if (obj.rotated) {
-      for (let i = 0; i < obj.size; i++) {
-        coordArr.push([coords[0], coords[1] + i - obj.offsetX]);
+    if (shipData.rotated) {
+      for (let i = 0; i < shipData.size; i++) {
+        coordArr.push([a, b + (i - shipData.offsetX)]);
       }
     } else {
-      for (let i = 0; i < obj.size; i++) {
-        coordArr.push([coords[0] + i - obj.offsetY, coords[1]]);
+      for (let i = 0; i < shipData.size; i++) {
+        coordArr.push([a + (i - shipData.offsetY), b]);
       }
     }
     return coordArr;
@@ -46,14 +57,13 @@ const GameBoard = (props) => {
   const addRandomShips = () => {
     const shipSizes = [6, 4, 4, 3, 3, 3, 2, 2, 2, 2]
     let shipArr = []
-    
-    shipSizes.map((size) => {
+
+    shipSizes.forEach((size) => {
       let coordArr = generateShip(size)
       while (!validateShip(coordArr, shipArr)) {
         coordArr = generateShip(size)
       }
       shipArr.push(Ship(coordArr))
-      
     })
     setShips(shipArr)
   }
@@ -61,7 +71,7 @@ const GameBoard = (props) => {
   const generateShip = (size) => {
     const rotated = Math.random() > .5 ? true : false
     const startingCoord = [
-      Math.floor(Math.random() * 10), 
+      Math.floor(Math.random() * 10),
       Math.floor(Math.random() * 10)
     ]
     const shipData = {
@@ -88,12 +98,10 @@ const GameBoard = (props) => {
   }
 
   const validateShip = (coordArr, shipArr = ships) => {
-    if (
-      !coordArr.some(coord => isShip(coord, shipArr)) &&
-      !coordArr.some(coord => coord[0] > 9 || coord[1] > 9)
-    ) {
-      return true
-    }
+    return coordArr.every(([a, b]) =>
+      _.inRange(a, 0, 10) &&
+      _.inRange(b, 0, 10) &&
+      !isShip([a, b], shipArr))
   }
 
   const findShip = (coords) => {
@@ -106,11 +114,8 @@ const GameBoard = (props) => {
 
   const recieveHit = (coords) => {
     const ship = findShip(coords);
-    for (let i = 0; i < ship.coords.length; i++) {
-      if (_.isEqual(ship.coords[i], coords)) {
-        ship.coords[i] = 'x'
-      }
-    }
+    ship.hit()
+
     const arr = [...ships];
     setShips(arr);
   }
@@ -137,7 +142,6 @@ const GameBoard = (props) => {
   return (
     <div className="game-board">
       {createGrid()}
-      <button onClick={addRandomShips}>click</button>
     </div>
   )
 }
