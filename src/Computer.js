@@ -1,22 +1,23 @@
 import _ from 'lodash'
 
-const computer = (() => {
+const Computer = (() => {
   let lastHitIndex = 0;
   let consecutiveHits = 0
   let modifier = 0
   let index = 0;
+  let tracking = false;
 
   const computerTurn = () => {
     const target = findTarget();
 
     if (!target || target.dataset.hit === 'true') {
-      // lastHitIndex = 0
       computerTurn();
     } else {
       target.click();
       if (target.classList.contains('hit')) {
         lastHitIndex = index;
-        consecutiveHits++;
+        consecutiveHits += tracking ? 2 : 1;
+        tracking = true
       } else {
         consecutiveHits = 0;
       }
@@ -38,17 +39,20 @@ const computer = (() => {
     return targets[index];
   }
 
-  const checkNeighbours  = (targets) => {
+  const checkNeighbours = (targets) => {
     const neighbours = {
       up: targets[lastHitIndex - 10],
       down: targets[lastHitIndex + 10],
       left: targets[lastHitIndex - 1],
       right: targets[lastHitIndex + 1]
     }
+    const noValidNeighbours =
+      Object.values(neighbours).every((square) =>
+        !square || square.dataset.hit === 'true')
 
-    const noValidNeighbours = Object.values(neighbours).every((square) => !square || square.dataset.hit === 'true')
     if (noValidNeighbours) {
       lastHitIndex = 0;
+      tracking = false
       return false;
     } else {
       return true
@@ -83,4 +87,4 @@ const computer = (() => {
   return { computerTurn }
 })();
 
-export default computer;
+export default Computer;
