@@ -1,9 +1,10 @@
 import _ from 'lodash'
 
 const Computer = (() => {
+  const targets = document.querySelectorAll('.player');
   let lastHitIndex = 0;
-  let consecutiveHits = 0
-  let modifier = 0
+  let consecutiveHits = 0;
+  let modifier = 0;
   let index = 0;
   let tracking = false;
 
@@ -17,7 +18,7 @@ const Computer = (() => {
       if (target.classList.contains('hit')) {
         lastHitIndex = index;
         consecutiveHits += tracking ? 2 : 1;
-        tracking = true
+        tracking = true;
       } else {
         consecutiveHits = 0;
       }
@@ -25,11 +26,10 @@ const Computer = (() => {
   }
 
   const findTarget = () => {
-    const targets = document.querySelectorAll('.player');
 
-    if (lastHitIndex && checkNeighbours(targets)) {
+    if (lastHitIndex >= 0 && validNeighbours()) {
       if (consecutiveHits > 1 && _.inRange(index, 10, 90)) {
-        index += modifier
+        index += modifier;
       } else {
         index = lastHitIndex + getModifier();
       }
@@ -39,49 +39,24 @@ const Computer = (() => {
     return targets[index];
   }
 
-  const checkNeighbours = (targets) => {
-    const neighbours = {
-      up: targets[lastHitIndex - 10],
-      down: targets[lastHitIndex + 10],
-      left: targets[lastHitIndex - 1],
-      right: targets[lastHitIndex + 1]
-    }
-    const noValidNeighbours =
-      Object.values(neighbours).every((square) =>
-        !square || square.dataset.hit === 'true')
+  const validNeighbours = () => {
+    const neighbours = [-10, 10, -1, 1]
+    const validNeighbours =
+      neighbours.filter((mod) =>
+        targets[lastHitIndex + mod] && targets[lastHitIndex + mod].dataset.hit === 'false');
 
-    if (noValidNeighbours) {
+    if (_.isEmpty(validNeighbours)) {
       lastHitIndex = 0;
       tracking = false
       return false;
     } else {
-      return true
+      return validNeighbours
     }
   }
 
   const getModifier = () => {
-    let choice = Math.floor(Math.random() * 4)
-
-    if (_.inRange(index, 10, 90)) {
-      switch (choice) {
-        case 0:
-          modifier = -10;
-          break;
-        case 1:
-          modifier = 10;
-          break;
-        case 2:
-          modifier = 1;
-          break;
-        default:
-          modifier = -1;
-      }
-    } else if (_.inRange(index, 0, 10)) {
-      modifier = choice > 1 ? 1 : 10;
-    } else if (_.inRange(index, 89, 100)) {
-      modifier = choice < 2 ? -1 : -10;
-    }
-    return modifier;
+    modifier = _.sample(validNeighbours())
+    return modifier
   }
 
   return { computerTurn }
