@@ -32,6 +32,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
   font-family: 'Goldman', cursive;
+  color: #fff;
   line-height: 1;
   background-color: rgb(44, 44, 44);
   background-image: url('./assets/y-so-serious.png');
@@ -109,12 +110,17 @@ a:visited {
   border: none;
 }
 
-.ship-yard {
+.ships-container {
+  text-align: center;
   width: 600px;
+  margin-left: 200px;
+}
+
+.ship-yard {
+  width: 100%;
   display: flex;
   gap: 12px;
   align-items: center;
-  margin-left: 200px;
 }
 
 .player-ship {

@@ -1,3 +1,0 @@
-
-
-export { allowDrop, drag, drop }

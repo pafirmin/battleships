@@ -1,7 +1,7 @@
-import _ from 'lodash'
+import _ from "lodash";
 
 const Computer = (() => {
-  const targets = document.querySelectorAll('.player');
+  const targets = document.querySelectorAll(".player");
   let lastHitIndex = 0;
   let consecutiveHits = 0;
   let modifier = 0;
@@ -11,11 +11,11 @@ const Computer = (() => {
   const computerTurn = () => {
     const target = findTarget();
 
-    if (!target || target.dataset.hit === 'true') {
+    if (!target || target.dataset.hit === "true") {
       computerTurn();
     } else {
       target.click();
-      if (target.classList.contains('hit')) {
+      if (target.classList.contains("hit")) {
         lastHitIndex = index;
         consecutiveHits += tracking ? 2 : 1;
         tracking = true;
@@ -23,10 +23,9 @@ const Computer = (() => {
         consecutiveHits = 0;
       }
     }
-  }
+  };
 
   const findTarget = () => {
-
     if (lastHitIndex >= 0 && validNeighbours()) {
       if (consecutiveHits > 1 && _.inRange(index, 10, 90)) {
         index += modifier;
@@ -37,29 +36,31 @@ const Computer = (() => {
       index = Math.floor(Math.random() * 100);
     }
     return targets[index];
-  }
+  };
 
   const validNeighbours = () => {
-    const neighbours = [-10, 10, -1, 1]
-    const validNeighbours =
-      neighbours.filter((mod) =>
-        targets[lastHitIndex + mod] && targets[lastHitIndex + mod].dataset.hit === 'false');
+    const neighbours = [-10, 10, -1, 1];
+    const validNeighbours = neighbours.filter(
+      (mod) =>
+        targets[lastHitIndex + mod] &&
+        targets[lastHitIndex + mod].dataset.hit === "false"
+    );
 
     if (_.isEmpty(validNeighbours)) {
       lastHitIndex = 0;
-      tracking = false
+      tracking = false;
       return false;
     } else {
-      return validNeighbours
+      return validNeighbours;
     }
-  }
+  };
 
   const getModifier = () => {
-    modifier = _.sample(validNeighbours())
-    return modifier
-  }
+    modifier = _.sample(validNeighbours());
+    return modifier;
+  };
 
-  return { computerTurn }
+  return { computerTurn };
 })();
 
 export default Computer;
