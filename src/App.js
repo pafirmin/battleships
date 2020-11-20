@@ -13,15 +13,16 @@ function App() {
   const [gameStarted, setGameStarted] = useState(false)
   const startGame = () => {
     const shipYard = document.getElementById('shipYard')
-    if (!shipYard.hasChildNodes())
+    if (!shipYard.hasChildNodes()){
       setGameStarted(true)
+    }
   }
 
   const [btnClass, setBtnClass] = useState('');
-  const [text, setText] = useState('DEPLOY FLEET')
+  const [text, setText] = useState('DEPLOY YOUR FLEET')
   useEffect(() => {
     if (gameStarted) {
-      setText('GAME ON!!!')
+      setText('COMMENCE!')
       setBtnClass('')
     }
   }, [gameStarted])

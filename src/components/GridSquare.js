@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 
 const GridSquare = (props) => {
   const { coords, recieveHit, isShip, placeShip, player } = props
@@ -12,7 +12,6 @@ const GridSquare = (props) => {
     }
   }, [isShip, player])
   
-
   const handleClick = () => {
     if (!clicked && props.currentPlayer !== player) {
       setClicked(true)
@@ -23,7 +22,7 @@ const GridSquare = (props) => {
   const makeShot = () => {
     if (isShip) {
       recieveHit(coords);
-      setStyle('hit')
+      setStyle('ship hit')
       setIcon(<i className="fas fa-crosshairs"></i>)
     } else {
       props.switchPlayer()
@@ -43,9 +42,8 @@ const GridSquare = (props) => {
     }
   }
 
-
   return (
-    <div
+    <div 
       onClick={() => handleClick()}
       className={`grid-square ${style} ${player}`}
       onDrop={(e) => drop(e)}

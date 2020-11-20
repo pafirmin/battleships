@@ -32,7 +32,7 @@ const PlayerShips = (props) => {
     let children = []
     for (let i = 0; i < props.size; i++) {
       children.push(
-        <div className="grid-square" key={i} />
+        <div className="ship-square" key={i} />
       )
     }
     return children
@@ -40,7 +40,7 @@ const PlayerShips = (props) => {
 
   return (
 
-      <div className="player-ship ship"
+      <div className="player-ship"
         id={props.shipId}
         draggable="true"
         data-size={props.size}

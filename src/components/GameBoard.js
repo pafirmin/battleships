@@ -15,7 +15,7 @@ const GameBoard = (props) => {
   }, [gameStarted])
 
   useEffect(() => {
-    if (gameStarted && ships.every(ship => ship.isSunk())) {
+    if (ships.length && ships.every(ship => ship.isSunk())) {
       console.log('winner');
     }
   }, [ships, gameStarted])
