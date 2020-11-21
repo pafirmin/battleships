@@ -4,7 +4,7 @@ const Computer = (() => {
   let lastHitIndex = false;
   let consecutiveHits = 0;
   let modifier = 0;      // Index of next target relative to last successful hit.
-  let index = 0;
+  let targetIndex = 0;
   let tracking = false;  // On a successful hit, the AI will try surrounding squares.
   
   const computerTurn = () => {
@@ -15,7 +15,7 @@ const Computer = (() => {
     } else {
       target.click();
       if (target.classList.contains("hit")) {
-        lastHitIndex = index;
+        lastHitIndex = targetIndex;
         consecutiveHits += tracking ? 2 : 1; // If the AI is tracking a target and scores a successful second hit,
         tracking = true;                     // it counts as a consecutive hit regardless of previous unsuccessful  
       } else {                               // attempts. This way, the modifier is retained and it will keep 
@@ -27,16 +27,16 @@ const Computer = (() => {
   const findTarget = () => {
     const targets = document.querySelectorAll(".player");
     if (lastHitIndex > 0 && validNeighbours(targets)) {
-      if (consecutiveHits > 1 && _.inRange(index, 10, 90)) { // AI will keep attacking in same direction if 
-        index += modifier;                                   // consecutive hits are achieved...
+      if (consecutiveHits > 1 && _.inRange(targetIndex, 10, 90)) { // AI will keep attacking in same direction if 
+        targetIndex += modifier;                                   // consecutive hits are achieved...
       } else {
-        modifier = _.sample(validNeighbours(targets));       // ... Otherwise, try a random, valid neighbouring square
-        index = lastHitIndex + modifier;                     // and remember the modifier.
+        modifier = _.sample(validNeighbours(targets));             // ... Otherwise, try a random, valid neighbouring square
+        targetIndex = lastHitIndex + modifier;                     // and remember the modifier.
       }
     } else {
-      index = Math.floor(Math.random() * 100);               // Pick a random square if there are no valid neighbours.
+      targetIndex = Math.floor(Math.random() * 100);               // Pick a random square if there are no valid neighbours.
     }
-    return targets[index];
+    return targets[targetIndex];
   };
 
   const validNeighbours = (targets) => {

@@ -34,7 +34,7 @@ const GameBoard = (props) => {
     const coordArr = getCoordArray(coords, shipData);
 
     if (validateShip(coordArr)) {
-      addShip(coordArr);
+      addShip(coordArr, shipData.rotated);
       document.getElementById(shipData.id).remove();
     }
   };
@@ -92,8 +92,8 @@ const GameBoard = (props) => {
     );
   };
 
-  const addShip = (coordArr) => {
-    const ship = Ship(coordArr);
+  const addShip = (coordArr, rotation) => {
+    const ship = Ship(coordArr, rotation);
     setShips((currentState) => {
       return [...currentState, ship];
     });
@@ -130,6 +130,7 @@ const GameBoard = (props) => {
             recieveHit={recieveHit}
             coords={[j, i]}
             isShip={isShip([j, i])}
+            ship={findShip([j, i])}
             placeShip={placeShip}
             player={props.player}
             switchPlayer={props.switchPlayer}

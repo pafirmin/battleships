@@ -21,7 +21,7 @@ function App() {
   const [text, setText] = useState("DEPLOY YOUR FLEET");
   useEffect(() => {
     if (gameStarted) {
-      setText("COMMENCE!");
+      setText("COMMENCE ATTACK!");
       setBtnClass("");
     }
   }, [gameStarted]);
@@ -35,9 +35,13 @@ function App() {
     }
   }, [boardReady]);
 
+  const refresh = () => {
+    window.location.reload();
+  }
+
   return (
     <div className="App">
-      <header>BATTLESHIPS</header>
+      <header><h1>BATTLESHIPS</h1></header>
       <div className="boards-container">
         <GameBoard
           player="player"

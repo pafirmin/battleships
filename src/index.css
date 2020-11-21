@@ -34,10 +34,11 @@ body {
   font-family: 'Goldman', cursive;
   color: #fff;
   line-height: 1;
-  background: linear-gradient(to right, rgb(17, 16, 66), rgb(0, 0, 0)) ;
-  /* background-image: url('./assets/y-so-serious.png'); */
-  /* background-repeat: repeat; */
-
+  background: 
+    linear-gradient(to right, rgba(24, 23, 94, 0.6), rgba(0, 0, 0, .6)), 
+    url('./assets/y-so-serious.png') ;
+  background-repeat: repeat;
+  
 }
 ol, ul {
 	list-style: none;
@@ -65,11 +66,34 @@ a:visited {
 header {
   text-align: center;
   font-size: 3rem;
+  margin: 0 auto;
+}
+
+header h1 {
+  margin-top: 20px;
+  position: relative;
+  padding: 15px 30px;
+  display: inline-block;
+  border: 1px solid #000;
+  border-radius: 100%;
+}
+
+header h1:before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  content: '';
+  width: 100%;
+  border-radius: 50%;
+  box-shadow: 0px 0px 60px 50px rgba(9, 71, 112, 0.815);
+  z-index: -1;
 }
 
 .boards-container {
   display: flex;
-  max-width: 1500px;
+  width: 1500px;
   margin: 30px auto;
   justify-content: center;
   gap: 25px;
@@ -78,14 +102,13 @@ header {
   text-align: center;
 }
 
-
 .game-board {
   margin: 0 auto;
   width: 500px;
   height: 500px;
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  border: 6px solid rgb(199, 199, 199);
+  border: 6px solid #c7c7c7;
   cursor: pointer;
   background: radial-gradient( #061d02, #082202,  #223b08);
 }
@@ -95,8 +118,8 @@ header {
 }
 
 @keyframes blink { 50% {
-   box-shadow: 0px 0px 12px 8px rgb(252, 58, 58);
-   background-color: rgb(252, 58, 58);
+   box-shadow: 0px 0px 12px 8px #fc3a3a;
+   background-color: #fc3a3a;
    color: #fff;
   }  }
 
@@ -109,7 +132,7 @@ header {
   color: rgb(173, 173, 173);
   width: 300PX;
   font-size: 2.3rem;
-  background-color: rgb(175, 47, 47);
+  background-color: #af2f2f;
   padding: 6px 12px;
   cursor: pointer;
   border: none;
@@ -122,6 +145,7 @@ header {
 }
 
 .ship-yard {
+  margin-top: -50px;
   width: 100%;
   display: flex;
   gap: 12px;
@@ -129,13 +153,13 @@ header {
 }
 
 .player-ship {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   width: 50px;
   scale: .5;
   border: 1px solid black;
   cursor: pointer;
-  background: linear-gradient(rgb(148, 159, 179), rgb(217, 241, 252), rgb(134, 134, 134));
+  background: linear-gradient(#949fb3, #d9f1fc, #868686);
 }
 
 .grid-square {
@@ -167,12 +191,12 @@ header {
 }
 
 .grid-square.computer:hover:after {
-  background-color: rgba(211, 40, 28, 0.4);
-  border: 1px solid rgb(255, 0, 0);
+  background-color: #d3281c66;
+  border: 1px solid #ff0000;
 }
 
 .ship-square {
-  border: 1px solid rgb(53, 53, 53);
+  border: 1px solid #353535;
   width: 100%;
   height: 50px;
   display: flex;
@@ -182,14 +206,21 @@ header {
   color: red;
 }
 
-.hit {
-  background-color: rgb(68, 68, 68);
+.ship.player {
+  background: linear-gradient(to right, #3d4149, #d9f1fc);
+  border: 1px solid #555555;
 }
 
-.ship.player {
-  background: linear-gradient(rgb(148, 159, 179), rgb(217, 241, 252), rgb(134, 134, 134));
-  box-shadow: 0px 0px 8px 4px rgb(21, 58, 88);
-  border: none;
+.ship.player.horizontal {
+  background: linear-gradient(#3d4149, #d9f1fc);
+}
+
+.ship.player.hit {
+  background: linear-gradient(to right, #191a1b, #acb2b4);
+}
+
+.ship.player.hit.horizontal {
+  background: linear-gradient( #191a1b, #acb2b4);
 }
 
 .ship.computer {
@@ -197,6 +228,11 @@ header {
   background-color: #2fce64;
 }
 
-.sunk {
-  background-color: black;
+.grid-square.player.sunk {
+  background-color: #242424;
+  border: 2px solid #000000;
+}
+
+.grid-square.computer.sunk {
+  background-color: rgb(91, 117, 81);
 }
