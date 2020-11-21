@@ -37,6 +37,7 @@ function App() {
 
   return (
     <div className="App">
+      <header>BATTLESHIPS</header>
       <div className="boards-container">
         <GameBoard
           player="player"

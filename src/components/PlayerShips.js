@@ -9,7 +9,7 @@ const PlayerShips = (props) => {
     const data = JSON.stringify({
       size: e.target.dataset.size,
       offsetY: Math.floor(
-        (e.clientY - e.target.getBoundingClientRect().top) / 50
+        (e.clientY - e.target.getBoundingClientRect().top) / 50 // Calculate the position of the player's cursor on the ship
       ),
       offsetX: Math.floor(
         (e.clientX - e.target.getBoundingClientRect().left) / 50

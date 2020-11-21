@@ -1,63 +1,56 @@
 import _ from "lodash";
 
 const Computer = (() => {
-  const targets = document.querySelectorAll(".player");
-  let lastHitIndex = 0;
+  let lastHitIndex = false;
   let consecutiveHits = 0;
-  let modifier = 0;
+  let modifier = 0;      // Index of next target relative to last successful hit.
   let index = 0;
-  let tracking = false;
-
+  let tracking = false;  // On a successful hit, the AI will try surrounding squares.
+  
   const computerTurn = () => {
     const target = findTarget();
-
+    
     if (!target || target.dataset.hit === "true") {
       computerTurn();
     } else {
       target.click();
       if (target.classList.contains("hit")) {
         lastHitIndex = index;
-        consecutiveHits += tracking ? 2 : 1;
-        tracking = true;
-      } else {
-        consecutiveHits = 0;
+        consecutiveHits += tracking ? 2 : 1; // If the AI is tracking a target and scores a successful second hit,
+        tracking = true;                     // it counts as a consecutive hit regardless of previous unsuccessful  
+      } else {                               // attempts. This way, the modifier is retained and it will keep 
+        consecutiveHits = 0;                 // attacking in the same direction.
       }
     }
   };
-
+  
   const findTarget = () => {
-    if (lastHitIndex >= 0 && validNeighbours()) {
-      if (consecutiveHits > 1 && _.inRange(index, 10, 90)) {
-        index += modifier;
+    const targets = document.querySelectorAll(".player");
+    if (lastHitIndex > 0 && validNeighbours(targets)) {
+      if (consecutiveHits > 1 && _.inRange(index, 10, 90)) { // AI will keep attacking in same direction if 
+        index += modifier;                                   // consecutive hits are achieved...
       } else {
-        index = lastHitIndex + getModifier();
+        modifier = _.sample(validNeighbours(targets));       // ... Otherwise, try a random, valid neighbouring square
+        index = lastHitIndex + modifier;                     // and remember the modifier.
       }
     } else {
-      index = Math.floor(Math.random() * 100);
+      index = Math.floor(Math.random() * 100);               // Pick a random square if there are no valid neighbours.
     }
     return targets[index];
   };
 
-  const validNeighbours = () => {
+  const validNeighbours = (targets) => {
     const neighbours = [-10, 10, -1, 1];
-    const validNeighbours = neighbours.filter(
-      (mod) =>
-        targets[lastHitIndex + mod] &&
-        targets[lastHitIndex + mod].dataset.hit === "false"
+    let validNeighbours = neighbours.filter((i) =>
+      targets[lastHitIndex + i] &&
+      targets[lastHitIndex + i].dataset.hit === "false"
     );
-
-    if (_.isEmpty(validNeighbours)) {
-      lastHitIndex = 0;
+    if (_.isEmpty(validNeighbours)) { // If there are no attackable neighbours, start from scratch.
+      lastHitIndex = false;
       tracking = false;
-      return false;
-    } else {
-      return validNeighbours;
+      validNeighbours = false;
     }
-  };
-
-  const getModifier = () => {
-    modifier = _.sample(validNeighbours());
-    return modifier;
+    return validNeighbours;
   };
 
   return { computerTurn };

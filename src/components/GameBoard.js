@@ -44,11 +44,11 @@ const GameBoard = (props) => {
 
     if (shipData.rotated) {
       for (let i = 0; i < shipData.size; i++) {
-        coordArr.push([a, b + (i - shipData.offsetX)]);
+        coordArr.push([a + (i - shipData.offsetX), b]);
       }
     } else {
       for (let i = 0; i < shipData.size; i++) {
-        coordArr.push([a + (i - shipData.offsetY), b]);
+        coordArr.push([a, b + (i - shipData.offsetY)]);
       }
     }
     return coordArr;
@@ -69,7 +69,7 @@ const GameBoard = (props) => {
   };
 
   const generateShip = (size) => {
-    const rotated = Math.random() > 0.5 ? true : false;
+    const rotated = Math.random() > 0.5;
     const startingCoord = [
       Math.floor(Math.random() * 10),
       Math.floor(Math.random() * 10),
@@ -85,6 +85,13 @@ const GameBoard = (props) => {
     return coordArray;
   };
 
+  const validateShip = (coordArr, shipArr = ships) => {
+    return coordArr.every(
+      ([a, b]) =>
+        _.inRange(a, 0, 10) && _.inRange(b, 0, 10) && !isShip([a, b], shipArr)
+    );
+  };
+
   const addShip = (coordArr) => {
     const ship = Ship(coordArr);
     setShips((currentState) => {
@@ -95,13 +102,6 @@ const GameBoard = (props) => {
   const isShip = (coords, shipArr = ships) => {
     return shipArr.some((ship) =>
       ship.coords.some((coord) => _.isEqual(coord, coords))
-    );
-  };
-
-  const validateShip = (coordArr, shipArr = ships) => {
-    return coordArr.every(
-      ([a, b]) =>
-        _.inRange(a, 0, 10) && _.inRange(b, 0, 10) && !isShip([a, b], shipArr)
     );
   };
 
@@ -128,8 +128,8 @@ const GameBoard = (props) => {
         children.push(
           <GridSquare
             recieveHit={recieveHit}
-            coords={[i, j]}
-            isShip={isShip([i, j])}
+            coords={[j, i]}
+            isShip={isShip([j, i])}
             placeShip={placeShip}
             player={props.player}
             switchPlayer={props.switchPlayer}
@@ -141,7 +141,7 @@ const GameBoard = (props) => {
     return children;
   };
 
-  return <div className="game-board">{createGrid()}</div>;
+  return <div className={`game-board ${props.player}`}>{createGrid()}</div>;
 };
 
 export default GameBoard;
