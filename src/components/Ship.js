@@ -1,6 +1,6 @@
-const Ship = (coordsArr, rotation) => {
+const Ship = (coordsArr, isRotated) => {
   const coords = coordsArr;
-  const rotated = rotation
+  const rotated = isRotated;
   let hitPoints = coordsArr.length;
 
   const hit = () => {
@@ -9,7 +9,6 @@ const Ship = (coordsArr, rotation) => {
   const isSunk = () => {
     return hitPoints === 0;
   };
-
   const horizontal = () => {
     return rotated
   }

@@ -33,16 +33,16 @@ const GameBoard = (props) => {
     }
   };
 
-  const getCoordArray = ([a, b], shipData) => {
+  const getCoordArray = ([x, y], shipData) => {
     const coordArr = [];
 
     if (shipData.rotated) {
       for (let i = 0; i < shipData.size; i++) {
-        coordArr.push([a + (i - shipData.offsetX), b]);
+        coordArr.push([x + (i - shipData.offsetX), y]);
       }
     } else {
       for (let i = 0; i < shipData.size; i++) {
-        coordArr.push([a, b + (i - shipData.offsetY)]);
+        coordArr.push([x, y + (i - shipData.offsetY)]);
       }
     }
     return coordArr;
@@ -81,8 +81,8 @@ const GameBoard = (props) => {
 
   const validateShip = (coordArr, shipArr = ships) => {
     return coordArr.every(
-      ([a, b]) =>
-        _.inRange(a, 0, 10) && _.inRange(b, 0, 10) && !isShip([a, b], shipArr)
+      ([x, y]) =>
+        _.inRange(x, 0, 10) && _.inRange(y, 0, 10) && !isShip([x, y], shipArr)
     );
   };
 

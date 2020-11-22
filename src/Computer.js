@@ -47,8 +47,7 @@ const Computer = (() => {
       modifier = _.sample(validNeighbours);
       targetIndex = lastHitIndex + modifier;
     } else if (finishHimOff && !sunk(initialHit)) {
-      const reverseMod = modifier - modifier * 2;
-      modifier = reverseMod;
+      modifier -= modifier * 2;
       found = true;
       targetIndex = initialHit + modifier;
       initialHit = lastHitIndex = finishHimOff = false;
