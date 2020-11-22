@@ -1,53 +1,71 @@
 import _ from "lodash";
 
 const Computer = (() => {
-  let lastHitIndex = false;
+  let tracking = false;
+  let found = false;
+  let finishHimOff = false;
+  let initialHit = false;
+  let lastHitIndex = 0;
   let consecutiveHits = 0;
-  let modifier = 0;      // Index of next target relative to last successful hit.
+  let modifier = 0;
   let targetIndex = 0;
-  let tracking = false;  // On a successful hit, the AI will try surrounding squares.
-  
+
   const computerTurn = () => {
     const target = findTarget();
-    
-    if (!target || target.dataset.hit === "true") {
+    if (!target || target.dataset.clicked === "true") {
       computerTurn();
     } else {
       target.click();
-      if (target.classList.contains("hit")) {
-        lastHitIndex = targetIndex;
-        consecutiveHits += tracking ? 2 : 1; // If the AI is tracking a target and scores a successful second hit,
-        tracking = true;                     // it counts as a consecutive hit regardless of previous unsuccessful  
-      } else {                               // attempts. This way, the modifier is retained and it will keep 
-        consecutiveHits = 0;                 // attacking in the same direction.
-      }
+    }
+    if (target.classList.contains("ship")) {
+      if (!consecutiveHits) { initialHit = targetIndex; }
+      if (tracking) { found = true; }
+      lastHitIndex = targetIndex;
+      consecutiveHits++;
+      setTimeout(() => computerTurn(), 500);
+    } else if (found && consecutiveHits > 1) {
+      consecutiveHits = tracking = lastHitIndex = 0;
+      finishHimOff = true;
+      found = false;
+    } else {
+      consecutiveHits = found = false;
     }
   };
-  
+
   const findTarget = () => {
     const targets = document.querySelectorAll(".player");
-    if (lastHitIndex > 0 && validNeighbours(targets)) {
-      if (consecutiveHits > 1 && _.inRange(targetIndex, 10, 90)) { // AI will keep attacking in same direction if 
-        targetIndex += modifier;                                   // consecutive hits are achieved...
-      } else {
-        modifier = _.sample(validNeighbours(targets));             // ... Otherwise, try a random, valid neighbouring square
-        targetIndex = lastHitIndex + modifier;                     // and remember the modifier.
-      }
+    const validNeighbours = getValidNeighbours(targets);
+    const sunk = (index) => targets[index].classList.contains("sunk");
+    const isValid = (index) =>
+      targets[index] && targets[index].dataset.clicked === "false";
+
+    if (sunk(targetIndex)) { found = false }
+    if (found && isValid(targetIndex + modifier)) {
+      targetIndex += modifier;
+    } else if (lastHitIndex && validNeighbours && !found) {
+      tracking = true;
+      modifier = _.sample(validNeighbours);
+      targetIndex = lastHitIndex + modifier;
+    } else if (finishHimOff && !sunk(initialHit)) {
+      const reverseMod = modifier - modifier * 2;
+      modifier = reverseMod;
+      found = true;
+      targetIndex = initialHit + modifier;
+      initialHit = lastHitIndex = finishHimOff = false;
     } else {
-      targetIndex = Math.floor(Math.random() * 100);               // Pick a random square if there are no valid neighbours.
+      lastHitIndex = finishHimOff = consecutiveHits = tracking = initialHit = found = false;
+      targetIndex = Math.floor(Math.random() * 100);
     }
     return targets[targetIndex];
   };
 
-  const validNeighbours = (targets) => {
+  const getValidNeighbours = (targets) => {
     const neighbours = [-10, 10, -1, 1];
     let validNeighbours = neighbours.filter((i) =>
       targets[lastHitIndex + i] &&
-      targets[lastHitIndex + i].dataset.hit === "false"
+      targets[lastHitIndex + i].dataset.clicked === "false"
     );
-    if (_.isEmpty(validNeighbours)) { // If there are no attackable neighbours, start from scratch.
-      lastHitIndex = false;
-      tracking = false;
+    if (_.isEmpty(validNeighbours)) {
       validNeighbours = false;
     }
     return validNeighbours;

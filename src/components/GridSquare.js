@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 
 const GridSquare = (props) => {
-  const { coords, recieveHit, isShip, placeShip, player, ship } = props;
-  const [style, setStyle] = useState("clear");
+  const { coords, recieveHit, isShip, placeShip, player, ship, gameStarted } = props;
   const [clicked, setClicked] = useState(false);
+  const [style, setStyle] = useState("clear");
   const [icon, setIcon] = useState("");
 
   useEffect(() => {
-    if (isShip && player === "player") {
+    if (isShip ) {
       setStyle(ship.horizontal() ? "ship horizontal" : "ship");
     }
   }, [isShip, player, ship]);
@@ -16,10 +16,10 @@ const GridSquare = (props) => {
     if (isShip && ship.isSunk()) {
       setStyle('sunk')
     }
-  })
+  });
 
   const handleClick = () => {
-    if (!clicked && props.currentPlayer !== player) {
+    if (!clicked && gameStarted && props.currentPlayer !== player) {
       setClicked(true);
       makeShot();
     }
@@ -28,7 +28,7 @@ const GridSquare = (props) => {
   const makeShot = () => {
     if (isShip) {
       recieveHit(coords);
-      setStyle("ship hit");
+      setStyle(ship.horizontal() ? "ship hit horizontal" : "ship hit");
       setIcon(<i className="fas fa-crosshairs"></i>);
     } else {
       props.switchPlayer();
@@ -54,7 +54,7 @@ const GridSquare = (props) => {
       className={`grid-square ${style} ${player}`}
       onDrop={(e) => drop(e)}
       onDragOver={(e) => allowDrop(e)}
-      data-hit={clicked}
+      data-clicked={clicked}
     >
       {icon}
     </div>

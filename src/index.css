@@ -113,7 +113,7 @@ header h1:before {
   background: radial-gradient( #061d02, #082202,  #223b08);
 }
 
-.game-board.player {
+.game-board.player-board {
   background: linear-gradient(135deg,  #4887ac, #11507a, #183c72);
 }
 
@@ -136,6 +136,11 @@ header h1:before {
   padding: 6px 12px;
   cursor: pointer;
   border: none;
+}
+
+.start-btn.winMsg {
+  background-color: rgb(41, 168, 41);
+  color: #fff;
 }
 
 .ships-container {
@@ -215,11 +220,11 @@ header h1:before {
   background: linear-gradient(#3d4149, #d9f1fc);
 }
 
-.ship.player.hit {
+.player.hit {
   background: linear-gradient(to right, #191a1b, #acb2b4);
 }
 
-.ship.player.hit.horizontal {
+.player.hit.horizontal {
   background: linear-gradient( #191a1b, #acb2b4);
 }
 
@@ -234,5 +239,5 @@ header h1:before {
 }
 
 .grid-square.computer.sunk {
-  background-color: rgb(91, 117, 81);
+  background-color: #2fce6485;;
 }

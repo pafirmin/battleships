@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import Ship from "./Ship";
 import GridSquare from "./GridSquare";
-import comp from "../Computer";
 
 const GameBoard = (props) => {
-  const { gameStarted, setBoardReady, player } = props;
+  const { gameStarted, setBoardReady, setGameWon, player } = props;
   const [ships, setShips] = useState([]);
 
   useEffect(() => {
@@ -16,14 +15,9 @@ const GameBoard = (props) => {
 
   useEffect(() => {
     if (ships.length && ships.every((ship) => ship.isSunk())) {
-      console.log("winner");
+      setGameWon(true);
     }
-  }, [ships, gameStarted]);
-
-  useEffect(() => {
-    if (props.currentPlayer === "computer" && player === "player")
-      setTimeout(() => comp.computerTurn(), 500);
-  });
+  }, [ships, gameStarted, setGameWon]);
 
   useEffect(() => {
     ships.length === 10 && setBoardReady(true);
@@ -135,6 +129,7 @@ const GameBoard = (props) => {
             player={props.player}
             switchPlayer={props.switchPlayer}
             currentPlayer={props.currentPlayer}
+            gameStarted={props.gameStarted}
           />
         );
       }
@@ -142,7 +137,7 @@ const GameBoard = (props) => {
     return children;
   };
 
-  return <div className={`game-board ${props.player}`}>{createGrid()}</div>;
+  return <div className={`game-board ${props.player}-board`}>{createGrid()}</div>;
 };
 
 export default GameBoard;

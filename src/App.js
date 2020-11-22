@@ -1,6 +1,7 @@
 import GameBoard from "./components/GameBoard";
 import ShipYard from "./components/ShipYard";
 import StartBtn from "./components/StartButton";
+import comp from "./Computer"
 import { useEffect, useState } from "react";
 
 function App() {
@@ -9,13 +10,29 @@ function App() {
     setCurrentPlayer(currentPlayer === "player" ? "computer" : "player");
   };
 
+  useEffect(() => {
+    if (currentPlayer === "computer") {
+      setTimeout(() => comp.computerTurn(), 500);
+    }
+  }, [currentPlayer]);
+
   const [gameStarted, setGameStarted] = useState(false);
   const startGame = () => {
-    const shipYard = document.getElementById("shipYard");
-    if (!shipYard.hasChildNodes()) {
+    if (boardReady && !gameWon) {
       setGameStarted(true);
+    } else if (gameWon) {
+      refresh()
     }
   };
+
+  const [boardReady, setBoardReady] = useState(false);
+  useEffect(() => {
+    if (boardReady) {
+      setText("START GAME");
+      setBtnClass("blink");
+      document.getElementById('ships-instruct').style.display = 'none'
+    }
+  }, [boardReady]);
 
   const [btnClass, setBtnClass] = useState("");
   const [text, setText] = useState("DEPLOY YOUR FLEET");
@@ -26,14 +43,13 @@ function App() {
     }
   }, [gameStarted]);
 
-  const [boardReady, setBoardReady] = useState(false);
+  const [gameWon, setGameWon] = useState(false);
   useEffect(() => {
-    if (boardReady) {
-      setText("START GAME");
-      setBtnClass("blink");
-      document.getElementById('ships-instruct').style.display = 'none'
+    if (gameWon) {
+      setText(currentPlayer === 'player' ? 'YOU WIN!' : 'COMPUTER WINS')
+      setBtnClass("winMsg")
     }
-  }, [boardReady]);
+  }, [gameWon, currentPlayer])
 
   const refresh = () => {
     window.location.reload();
@@ -49,6 +65,7 @@ function App() {
           currentPlayer={currentPlayer}
           gameStarted={gameStarted}
           setBoardReady={setBoardReady}
+          setGameWon={setGameWon}
         />
         <StartBtn startGame={startGame} text={text} btnClass={btnClass} />
         <GameBoard
@@ -57,6 +74,7 @@ function App() {
           currentPlayer={currentPlayer}
           gameStarted={gameStarted}
           setBoardReady={setBoardReady}
+          setGameWon={setGameWon}
         />
       </div>
       <ShipYard />
