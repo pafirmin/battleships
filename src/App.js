@@ -1,7 +1,7 @@
 import GameBoard from "./components/GameBoard";
 import ShipYard from "./components/ShipYard";
 import StartBtn from "./components/StartButton";
-import computer from "./Computer"
+import Computer from "./Computer";
 import { useEffect, useState } from "react";
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
 
   useEffect(() => {
     if (currentPlayer === "computer") {
-      setTimeout(() => computer.takeTurn(), 500);
+      setTimeout(() => Computer.takeTurn(), 500);
     }
   }, [currentPlayer]);
 
@@ -21,7 +21,7 @@ function App() {
     if (boardReady && !gameWon) {
       setGameStarted(true);
     } else if (gameWon) {
-      refresh()
+      refresh();
     }
   };
 
@@ -30,7 +30,7 @@ function App() {
     if (boardReady) {
       setText("START GAME");
       setBtnClass("blink");
-      document.getElementById('ships-instruct').style.display = 'none'
+      document.getElementById("ships-instruct").style.display = "none";
     }
   }, [boardReady]);
 
@@ -46,19 +46,21 @@ function App() {
   const [gameWon, setGameWon] = useState(false);
   useEffect(() => {
     if (gameWon) {
-      setGameStarted(false)
-      setText(currentPlayer === 'player' ? 'YOU WIN!' : 'COMPUTER WINS')
-      setBtnClass("winMsg")
+      setGameStarted(false);
+      setText(currentPlayer === "player" ? "YOU WIN!" : "COMPUTER WINS");
+      setBtnClass("winMsg");
     }
-  }, [gameWon, currentPlayer])
+  }, [gameWon, currentPlayer]);
 
   const refresh = () => {
     window.location.reload();
-  }
+  };
 
   return (
     <div className="App">
-      <header><h1>BATTLESHIPS</h1></header>
+      <header>
+        <h1>BATTLESHIPS</h1>
+      </header>
       <div className="boards-container">
         <GameBoard
           player="player"

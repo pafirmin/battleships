@@ -137,7 +137,9 @@ const GameBoard = (props) => {
     return children;
   };
 
-  return <div className={`game-board ${props.player}-board`}>{createGrid()}</div>;
+  return (
+    <div className={`game-board ${props.player}-board`}>{createGrid()}</div>
+  );
 };
 
 export default GameBoard;

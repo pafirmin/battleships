@@ -5,7 +5,7 @@ const ShipYard = () => {
   const fleet = [6, 4, 4, 3, 3, 3, 2, 2, 2, 2];
 
   return (
-    <div className = "ships-container">
+    <div className="ships-container">
       <span id="ships-instruct" className="blink">
         CLICK TO ROTATE, DRAG TO DEPLOY
       </span>

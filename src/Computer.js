@@ -2,12 +2,12 @@ import _ from "lodash";
 
 const ComputerPlayer = (() => {
   let isSearching = false;
-  let lockedOn = false;    
+  let lockedOn = false;
   let initialHit = false;
   let lastHitIndex = false;
   let consecutiveHits = false;
-  let modifier = 0;
   let targetIndex = 0;
+  let modifier = 0;
 
   const takeTurn = () => {
     const target = findTarget();
@@ -18,7 +18,7 @@ const ComputerPlayer = (() => {
         initialHit = targetIndex;
       }
       if (isSearching) {
-        lockedOn = true           
+        lockedOn = true;
       }
       lastHitIndex = targetIndex;
       consecutiveHits++;
@@ -28,37 +28,37 @@ const ComputerPlayer = (() => {
       consecutiveHits = 0;
     } else {
       lockedOn = false;
-      consecutiveHits = 0
+      consecutiveHits = 0;
     }
   };
 
   const findTarget = () => {
     const targets = document.querySelectorAll(".player");
     const validNeighbours = getValidNeighbours(targets);
-    const reverseMod = modifier - modifier * 2
+    const reverseMod = modifier - modifier * 2;
     const isSunk = (index) => targets[index].classList.contains("sunk");
     const isValid = (index) =>
       targets[index] && targets[index].dataset.clicked === "false";
 
     if (initialHit && isSunk(initialHit)) {
-      lockedOn = false
+      lockedOn = false;
     }
     if (lockedOn) {
-      if (isValid(targetIndex + modifier) && consecutiveHits) { // If locked onto a ship, keep attacking in same direction until miss...
+      if (isValid(targetIndex + modifier) && consecutiveHits) {
         targetIndex += modifier;
-      } else if (isValid(initialHit + reverseMod)) { // ... If not sunk, on next turn attack in oposite direction from the initial hit. 
+      } else if (isValid(initialHit + reverseMod)) {
         modifier = reverseMod;
         targetIndex = initialHit + modifier;
       } else {
-        targetIndex = findRandomTarget(targets)
+        targetIndex = findRandomTarget(targets);
       }
     } else {
-      if (lastHitIndex && validNeighbours && !isSunk(lastHitIndex)) { 
-        isSearching = true;                    // If a hit is scored, try random adjacent squares until the ship is found.
+      if (lastHitIndex && validNeighbours && !isSunk(lastHitIndex)) {
+        isSearching = true;
         modifier = _.sample(validNeighbours);
         targetIndex = lastHitIndex + modifier;
       } else {
-        targetIndex = findRandomTarget(targets)
+        targetIndex = findRandomTarget(targets);
       }
     }
     return targets[targetIndex];
@@ -79,10 +79,11 @@ const ComputerPlayer = (() => {
   const findRandomTarget = (targets) => {
     lastHitIndex = consecutiveHits = isSearching = initialHit = lockedOn = false;
     let target = _.sample(
-      [...targets].filter(i => i.dataset.clicked === 'false'));
+      [...targets].filter((i) => i.dataset.clicked === "false")
+    );
 
     return [...targets].indexOf(target);
-  }
+  };
 
   return { takeTurn };
 })();

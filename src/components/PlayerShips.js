@@ -4,7 +4,7 @@ const PlayerShips = (props) => {
   let rotated = false;
 
   function drag(e) {
-    document.getElementById('ships-instruct').classList.remove('blink')
+    document.getElementById("ships-instruct").classList.remove("blink");
     e.target.style.scale = "1";
     const data = JSON.stringify({
       size: e.target.dataset.size,

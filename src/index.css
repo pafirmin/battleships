@@ -152,6 +152,7 @@ header h1:before {
 .ship-yard {
   margin-top: -50px;
   width: 100%;
+  height:300px;
   display: flex;
   gap: 12px;
   align-items: center;
@@ -196,12 +197,12 @@ header h1:before {
 }
 
 .grid-square.computer:hover:after {
-  background-color: #d3281c66;
+  background-color: #ff110066;
   border: 1px solid #ff0000;
 }
 
 .ship-square {
-  border: 1px solid #353535;
+  border: 1px solid #6b6b6b;
   width: 100%;
   height: 50px;
   display: flex;
@@ -212,20 +213,20 @@ header h1:before {
 }
 
 .ship.player {
-  background: linear-gradient(to right, #3d4149, #d9f1fc);
-  border: 1px solid #555555;
+  background: linear-gradient(to left, #3d4149, #d9f1fc);
+  border: 1px solid #606869;
 }
 
 .ship.player.horizontal {
-  background: linear-gradient(#3d4149, #d9f1fc);
+  background: linear-gradient(#d9f1fc, #3d4149);
 }
 
 .player.hit {
-  background: linear-gradient(to right, #191a1b, #acb2b4);
+  background: linear-gradient(to left, #191a1b, #acb2b4);
 }
 
 .player.hit.horizontal {
-  background: linear-gradient( #191a1b, #acb2b4);
+  background: linear-gradient(#acb2b4, #191a1b);
 }
 
 .ship.computer {

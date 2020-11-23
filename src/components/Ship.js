@@ -10,8 +10,8 @@ const Ship = (coordsArr, isRotated) => {
     return hitPoints === 0;
   };
   const horizontal = () => {
-    return rotated
-  }
+    return rotated;
+  };
 
   return { hit, isSunk, coords, horizontal };
 };

@@ -1,25 +1,34 @@
 import React, { useEffect, useState } from "react";
 
 const GridSquare = (props) => {
-  const { coords, recieveHit, isShip, placeShip, player, ship, gameStarted } = props;
+  const {
+    coords,
+    recieveHit,
+    isShip,
+    placeShip,
+    player,
+    currentPlayer,
+    ship,
+    gameStarted,
+  } = props;
   const [clicked, setClicked] = useState(false);
   const [style, setStyle] = useState("clear");
   const [icon, setIcon] = useState("");
 
   useEffect(() => {
-    if (isShip && player === 'player') {
+    if (isShip && player === "player") {
       setStyle(ship.horizontal() ? "ship horizontal" : "ship");
     }
   }, [isShip, player, ship]);
 
   useEffect(() => {
     if (isShip && ship.isSunk()) {
-      setStyle('sunk')
+      setStyle("sunk");
     }
   });
 
   const handleClick = () => {
-    if (!clicked && gameStarted && props.currentPlayer !== player) {
+    if (!clicked && gameStarted && currentPlayer !== player) {
       setClicked(true);
       makeShot();
     }
