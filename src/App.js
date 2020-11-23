@@ -46,6 +46,7 @@ function App() {
   const [gameWon, setGameWon] = useState(false);
   useEffect(() => {
     if (gameWon) {
+      setGameStarted(false)
       setText(currentPlayer === 'player' ? 'YOU WIN!' : 'COMPUTER WINS')
       setBtnClass("winMsg")
     }

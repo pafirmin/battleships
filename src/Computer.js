@@ -1,10 +1,9 @@
 import _ from "lodash";
 
 const Computer = (() => {
-  let tracking = false;
-  let found = false;
-  let finishHimOff = false;
-  let initialHit = false;
+  let isSearching = false;
+  let lockedOn = false;
+  let initialHit = 0;
   let lastHitIndex = 0;
   let consecutiveHits = 0;
   let modifier = 0;
@@ -18,43 +17,49 @@ const Computer = (() => {
       target.click();
     }
     if (target.classList.contains("ship")) {
-      if (!consecutiveHits) { initialHit = targetIndex; }
-      if (tracking) { found = true; }
+      if (!consecutiveHits && !isSearching) { initialHit = targetIndex; }
+      if (isSearching) { lockedOn = true }
       lastHitIndex = targetIndex;
       consecutiveHits++;
       setTimeout(() => computerTurn(), 500);
-    } else if (found && consecutiveHits > 1) {
-      consecutiveHits = tracking = lastHitIndex = 0;
-      finishHimOff = true;
-      found = false;
+    } else if (lockedOn && consecutiveHits) {
+      isSearching = false;
+      consecutiveHits = 0;
     } else {
-      consecutiveHits = found = false;
+      lockedOn = false;
+      consecutiveHits = 0 
     }
   };
 
   const findTarget = () => {
+    const reverseMod = modifier - modifier * 2
     const targets = document.querySelectorAll(".player");
     const validNeighbours = getValidNeighbours(targets);
-    const sunk = (index) => targets[index].classList.contains("sunk");
+    const isSunk = (index) => targets[index].classList.contains("sunk");
     const isValid = (index) =>
       targets[index] && targets[index].dataset.clicked === "false";
 
-    if (sunk(targetIndex)) { found = false }
-    if (found && isValid(targetIndex + modifier)) {
-      targetIndex += modifier;
-    } else if (lastHitIndex && validNeighbours && !found) {
-      tracking = true;
-      modifier = _.sample(validNeighbours);
-      targetIndex = lastHitIndex + modifier;
-    } else if (finishHimOff && !sunk(initialHit)) {
-      modifier -= modifier * 2;
-      found = true;
-      targetIndex = initialHit + modifier;
-      initialHit = lastHitIndex = finishHimOff = false;
+    if (isSunk(initialHit)) { lockedOn = false }
+
+    if (lockedOn) {
+      if (isValid(targetIndex + modifier) && consecutiveHits) {
+        targetIndex += modifier;
+      } else if (isValid(initialHit + reverseMod)) {
+        modifier = reverseMod;
+        targetIndex = initialHit + modifier;
+      } else {
+        targetIndex = findRandomTarget()
+      }
     } else {
-      lastHitIndex = finishHimOff = consecutiveHits = tracking = initialHit = found = false;
-      targetIndex = Math.floor(Math.random() * 100);
+      if (lastHitIndex && validNeighbours && !isSunk(lastHitIndex)) {
+        isSearching = true;
+        modifier = _.sample(validNeighbours);
+        targetIndex = lastHitIndex + modifier;
+      } else {
+        targetIndex = findRandomTarget()
+      }
     }
+
     return targets[targetIndex];
   };
 
@@ -69,6 +74,11 @@ const Computer = (() => {
     }
     return validNeighbours;
   };
+
+  const findRandomTarget = () => {
+    lastHitIndex = consecutiveHits = isSearching = initialHit = lockedOn = 0;
+    return Math.floor(Math.random() * 100);
+  }
 
   return { computerTurn };
 })();

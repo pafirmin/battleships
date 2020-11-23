@@ -7,7 +7,7 @@ const GridSquare = (props) => {
   const [icon, setIcon] = useState("");
 
   useEffect(() => {
-    if (isShip && player === 'player') {
+    if (isShip ) {
       setStyle(ship.horizontal() ? "ship horizontal" : "ship");
     }
   }, [isShip, player, ship]);
