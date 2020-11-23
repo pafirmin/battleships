@@ -36,7 +36,7 @@ const GridSquare = (props) => {
 
   const makeShot = () => {
     if (isShip) {
-      recieveHit(coords);
+      recieveHit(ship);
       setStyle(ship.horizontal() ? "ship hit horizontal" : "ship hit");
       setIcon(<i className="fas fa-crosshairs"></i>);
     } else {

@@ -107,10 +107,8 @@ const GameBoard = (props) => {
     }
   };
 
-  const recieveHit = (coords) => {
-    const ship = findShip(coords);
+  const recieveHit = (ship) => {
     ship.hit();
-
     const arr = [...ships];
     setShips(arr);
   };
