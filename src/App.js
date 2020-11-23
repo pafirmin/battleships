@@ -1,7 +1,7 @@
 import GameBoard from "./components/GameBoard";
 import ShipYard from "./components/ShipYard";
 import StartBtn from "./components/StartButton";
-import comp from "./Computer"
+import computer from "./Computer"
 import { useEffect, useState } from "react";
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
 
   useEffect(() => {
     if (currentPlayer === "computer") {
-      setTimeout(() => comp.computerTurn(), 500);
+      setTimeout(() => computer.takeTurn(), 500);
     }
   }, [currentPlayer]);
 

@@ -1,65 +1,66 @@
 import _ from "lodash";
 
-const Computer = (() => {
+const ComputerPlayer = (() => {
   let isSearching = false;
-  let lockedOn = false;
-  let initialHit = 0;
-  let lastHitIndex = 0;
-  let consecutiveHits = 0;
+  let lockedOn = false;    
+  let initialHit = false;
+  let lastHitIndex = false;
+  let consecutiveHits = false;
   let modifier = 0;
   let targetIndex = 0;
 
-  const computerTurn = () => {
+  const takeTurn = () => {
     const target = findTarget();
-    if (!target || target.dataset.clicked === "true") {
-      computerTurn();
-    } else {
-      target.click();
-    }
+    target.click();
+
     if (target.classList.contains("ship")) {
-      if (!consecutiveHits && !isSearching) { initialHit = targetIndex; }
-      if (isSearching) { lockedOn = true }
+      if (!consecutiveHits && !isSearching) {
+        initialHit = targetIndex;
+      }
+      if (isSearching) {
+        lockedOn = true           
+      }
       lastHitIndex = targetIndex;
       consecutiveHits++;
-      setTimeout(() => computerTurn(), 500);
+      setTimeout(() => takeTurn(), 500);
     } else if (lockedOn && consecutiveHits) {
       isSearching = false;
       consecutiveHits = 0;
     } else {
       lockedOn = false;
-      consecutiveHits = 0 
+      consecutiveHits = 0
     }
   };
 
   const findTarget = () => {
-    const reverseMod = modifier - modifier * 2
     const targets = document.querySelectorAll(".player");
     const validNeighbours = getValidNeighbours(targets);
+    const reverseMod = modifier - modifier * 2
     const isSunk = (index) => targets[index].classList.contains("sunk");
     const isValid = (index) =>
       targets[index] && targets[index].dataset.clicked === "false";
 
-    if (isSunk(initialHit)) { lockedOn = false }
-
+    if (initialHit && isSunk(initialHit)) {
+      lockedOn = false
+    }
     if (lockedOn) {
-      if (isValid(targetIndex + modifier) && consecutiveHits) {
+      if (isValid(targetIndex + modifier) && consecutiveHits) { // If locked onto a ship, keep attacking in same direction until miss...
         targetIndex += modifier;
-      } else if (isValid(initialHit + reverseMod)) {
+      } else if (isValid(initialHit + reverseMod)) { // ... If not sunk, on next turn attack in oposite direction from the initial hit. 
         modifier = reverseMod;
         targetIndex = initialHit + modifier;
       } else {
-        targetIndex = findRandomTarget()
+        targetIndex = findRandomTarget(targets)
       }
     } else {
-      if (lastHitIndex && validNeighbours && !isSunk(lastHitIndex)) {
-        isSearching = true;
+      if (lastHitIndex && validNeighbours && !isSunk(lastHitIndex)) { 
+        isSearching = true;                    // If a hit is scored, try random adjacent squares until the ship is found.
         modifier = _.sample(validNeighbours);
         targetIndex = lastHitIndex + modifier;
       } else {
-        targetIndex = findRandomTarget()
+        targetIndex = findRandomTarget(targets)
       }
     }
-
     return targets[targetIndex];
   };
 
@@ -75,12 +76,15 @@ const Computer = (() => {
     return validNeighbours;
   };
 
-  const findRandomTarget = () => {
-    lastHitIndex = consecutiveHits = isSearching = initialHit = lockedOn = 0;
-    return Math.floor(Math.random() * 100);
+  const findRandomTarget = (targets) => {
+    lastHitIndex = consecutiveHits = isSearching = initialHit = lockedOn = false;
+    let target = _.sample(
+      [...targets].filter(i => i.dataset.clicked === 'false'));
+
+    return [...targets].indexOf(target);
   }
 
-  return { computerTurn };
+  return { takeTurn };
 })();
 
-export default Computer;
+export default ComputerPlayer;
